@@ -21,9 +21,8 @@ for startnum in start:
 
 	requests += 1
 	elapsed_time = time() - start_time
-	#print('Request:{}; Frequency: {} requests/s'.format(requests, requests/elapsed_time))
+	print('Request:{}; Frequency: {} requests/s'.format(requests, requests/elapsed_time))
 	clear_output(wait = True)
-	print (startnum)
 		
 
 
