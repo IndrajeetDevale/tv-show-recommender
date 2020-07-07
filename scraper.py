@@ -95,3 +95,5 @@ tv_ratings = pd.DataFrame({'tv series': names,
 #reordering the columns
 tv_ratings = tv_ratings[['tv series','year','imdb','votes','genres','description']]
 print(tv_ratings.head())
+tv_ratings.loc[:'year'] = tv_ratings['year'].str[-5:-2].astype(int)
+print(tv_ratings['year'].head(3))
