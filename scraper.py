@@ -8,7 +8,7 @@ from warnings import warn
 from random import randint
 from IPython.core.display import clear_output
 import pandas as pd
-
+import regex as re
 #Lists to store scraped data in
 names = []
 years = []
@@ -59,6 +59,7 @@ for startnum in start:
 
 		#scrape date
 		year = container.h3.find('span', class_ = "lister-item-year text-muted unbold").text
+		year = re.findall(r'\d{4}', 'year')[-1]
 		years.append(year)
 
 		#scrape imdb rating
@@ -92,8 +93,28 @@ tv_ratings = pd.DataFrame({'tv series': names,
 'description': descriptions
 })
 
+print(tv_ratings.info())
 #reordering the columns
 tv_ratings = tv_ratings[['tv series','year','imdb','votes','genres','description']]
-print(tv_ratings.head())
-tv_ratings.loc[:'year'] = tv_ratings['year'].str[-5:-2].astype(int)
-print(tv_ratings['year'].head(3))
+#print(tv_ratings.head())
+#year_count = len(years)
+#for noyears in range(len(years)):
+#	try:
+#		tv_ratings.loc[noyears:'year'] = tv_ratings[noyears:'year'].str[-5:-1].astype(int)
+#	except:
+#		tv_ratings.loc[noyears:'year'] = tv_ratings[noyears:'year'].str[-6:-2].astype(int)
+if isinstance(years, list): 
+  print("your object is a list !") 
+else: 
+    print("your object is not a list") 
+
+print(tv_ratings['years'].unique())
+
+
+#print(tv_ratings[:'year'].unique())[-6:-2]
+#try:
+#	tv_ratings.loc[:'year'] = tv_ratings['year'].str[-5:-1].astype(int)
+#except:
+#	tv_ratings.loc[:'year'] = tv_ratings['year'].str[-6:-2].astype(int)
+
+#print(tv_ratings['year'].head(3))
