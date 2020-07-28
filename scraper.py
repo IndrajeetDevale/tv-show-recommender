@@ -15,6 +15,7 @@ years = []
 imdb_ratings = []
 votes = []
 genres = []
+cast = []
 descriptions = []
 
 #accept results in english language
@@ -23,7 +24,7 @@ headers = {"Accept-Language": "en-US, en;q=0.5"}
 #initialisation of values used in counter
 i =0
 requests = 0
-start = [str(i) for i in range(1,252,50)]
+start = [str(i) for i in range(1,4951,50)]
 
 #for every page based on index of TV show
 for startnum in start:
@@ -59,8 +60,16 @@ for startnum in start:
 
 		#scrape date
 		year = container.h3.find('span', class_ = "lister-item-year text-muted unbold").text
-		year = re.findall(r'\d{4}', year)[-1]
+		try:
+			year = re.findall(r'\d{4}', year)[-1]
+		except IndexError:
+			print(year)
+			year = ""
 		years.append(year)
+
+		casts = container.find('div', class_ = "lister-item-content")
+		casts = casts.find_all('p')[2]
+		cast.append(casts)
 
 
 		#scrape imdb rating
@@ -93,6 +102,7 @@ tv_ratings = pd.DataFrame({'tv series': names,
 'imdb': imdb_ratings,
 'votes': votes,	
 'genres': genres,
+'cast': cast,
 'description': descriptions
 })
 
@@ -102,9 +112,9 @@ tv_ratings.info()
 
 
 #reordering the columns
-tv_ratings = tv_ratings[['tv series','year','imdb','votes','genres','description']]
-print(tv_ratings['year'].head(3))
+tv_ratings = tv_ratings[['tv series','year','imdb','votes','genres','cast','description']]
+#print(tv_ratings['year'].head(3))
 
-print(tv_ratings.describe().loc[['min', 'max'], ['imdb', 'year']])
+#print(tv_ratings.describe().loc[['min', 'max'], ['imdb', 'year']])
 
-tv_ratings.to_csv('tv_ratings.csv')
+tv_ratings.to_csv('tv_ratings4.csv')
