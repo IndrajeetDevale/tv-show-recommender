@@ -9,6 +9,7 @@ from random import randint
 from IPython.core.display import clear_output
 import pandas as pd
 import regex as re
+import numpy as np
 #Lists to store scraped data in
 names = []
 years = []
@@ -24,7 +25,7 @@ headers = {"Accept-Language": "en-US, en;q=0.5"}
 #initialisation of values used in counter
 i =0
 requests = 0
-start = [str(i) for i in range(1,4951,50)]
+start = [str(i) for i in range(1,51,50)]
 
 #for every page based on index of TV show
 for startnum in start:
@@ -64,12 +65,14 @@ for startnum in start:
 			year = re.findall(r'\d{4}', year)[-1]
 		except IndexError:
 			print(year)
-			year = ""
+			year = "0"
 		years.append(year)
 
 		casts = container.find('div', class_ = "lister-item-content")
-		casts = casts.find_all('p')[2]
-		cast.append(casts)
+		p = casts.find_all('p')[2].text
+		p = p.replace("Stars:","")
+		cast.append(p)
+
 
 
 		#scrape imdb rating
@@ -95,9 +98,8 @@ for startnum in start:
 
 
 
-
 #create dataframe 
-tv_ratings = pd.DataFrame({'tv series': names,
+tv_ratings =  pd.DataFrame({'tv series': names,
 'year': years,
 'imdb': imdb_ratings,
 'votes': votes,	
@@ -106,13 +108,17 @@ tv_ratings = pd.DataFrame({'tv series': names,
 'description': descriptions
 })
 
+print(len(years),len(imdb_ratings),len(votes),len(genres),len(cast),len(descriptions),)
+#tv_ratings = pd.DataFrame.from_dict(tv_ratings, orient = 'index')
 #converting years 
 tv_ratings['year'] = tv_ratings['year'].astype(int)
+
 tv_ratings.info()
 
 
 #reordering the columns
 tv_ratings = tv_ratings[['tv series','year','imdb','votes','genres','cast','description']]
+
 #print(tv_ratings['year'].head(3))
 
 #print(tv_ratings.describe().loc[['min', 'max'], ['imdb', 'year']])
