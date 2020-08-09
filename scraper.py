@@ -25,7 +25,7 @@ headers = {"Accept-Language": "en-US, en;q=0.5"}
 #initialisation of values used in counter
 i =0
 requests = 0
-start = [str(i) for i in range(1,51,50)]
+start = [str(i) for i in range(1,4951,50)]
 
 #for every page based on index of TV show
 for startnum in start:
@@ -71,6 +71,7 @@ for startnum in start:
 		casts = container.find('div', class_ = "lister-item-content")
 		p = casts.find_all('p')[2].text
 		p = p.replace("Stars:","")
+		p=p.replace("\n","")
 		cast.append(p)
 
 
@@ -86,7 +87,7 @@ for startnum in start:
 		#scrape genre
 		try:
 			genre = container.p.find('span', class_ = "genre").text
-			genre = genre.strip('\n')
+			genre = genre.replace('\n','')
 			genres.append(genre)
 		except:
 			genres.append('none')
